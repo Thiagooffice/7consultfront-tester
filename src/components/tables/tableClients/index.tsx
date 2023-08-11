@@ -5,16 +5,21 @@ import { TdOptionsForClients } from "../tdOptionsForClients";
 import { Layout } from "../../layout";
 import { useEffect, useState } from "react"
 import { api } from "../../../services/api";
+import moment from 'moment'
+import { TableCaption } from "../tableCaption";
+import { dateFormat } from "../../../utils/dateFormat";
 
+interface TableClients {
+    changeMenu: any
+}
 
-export function TableClients() {
+export function TableClients({ changeMenu }: TableClients) {
     const [clients, setClients] = useState([])
 
     useEffect(() => {
         async function getClients() {
             const { data } = await api.get("Clientes")
             setClients(data)
-            console.log(clients);
         }
         getClients()
     }, [])
@@ -23,6 +28,10 @@ export function TableClients() {
         <Layout title="Clientes">
             <Box h="90%" overflowY="scroll">
                 <Table overflowY="scroll" css={{ borderCollapse: "separate", borderSpacing: "0px 8px" }} >
+                    <TableCaption
+                        items={clients}
+                        text={"Não foi encontrado nehum cliente"}
+                    />
                     <Thead>
                         <Tr>
                             <TableHeader>Cliente</TableHeader>
@@ -37,9 +46,9 @@ export function TableClients() {
                                 <Tr key={id}>
                                     <TableTd text={item.nome} />
                                     <TableTd text={item.id} />
-                                    <TableTd text={item.create_Client} />
-                                    <TableTd text={item.dataAtualizacao === null ? "-" : item.dataAtualizacao} />
-                                    <TdOptionsForClients />
+                                    <TableTd text={dateFormat(item.create_Client)} />
+                                    <TableTd text={item.dataAtualizacao === null ? "-" : dateFormat(item.dataAtualizacao)} />
+                                    <TdOptionsForClients changeMenuOptions={changeMenu} item={item} />
                                 </Tr>
                             ))
                         }

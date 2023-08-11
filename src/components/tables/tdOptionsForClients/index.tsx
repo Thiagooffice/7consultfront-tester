@@ -15,45 +15,42 @@ import {
   Button,
   useDisclosure,
 } from "@chakra-ui/react";
-// import { Modal } from "~/components";
-// import { deleteScenario } from "~/hooks/useScenarios";
 import { useToast } from "@chakra-ui/toast";
-// import { Scenario } from "~/types";
 import { useRouter } from "next/router";
 import { Client } from "../../../types";
 import { Modal } from "../../modal";
+import { api } from "../../../services/api";
 
 type TdOptionsProps = {
-  item?: Client;
-  // refetch?: (
-  //   options?: RefetchOptions & RefetchQueryFilters
-  // ) => Promise<QueryObserverResult>;
+  item: Client;
+  changeMenuOptions: any
 };
 
-export const TdOptionsForClients = ({ item }: TdOptionsProps) => {
+export const TdOptionsForClients = ({ item, changeMenuOptions }: TdOptionsProps) => {
   const toast = useToast();
   const { push } = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+
   async function handleDeleteClient(item: any) {
-    // try {
-    // //   await deleteScenario(item);
-    //   onClose();
-    //   refetch();
-    //   toast({
-    //     description: "Deletado com Sucesso",
-    //     status: "success",
-    //     variant: "solid",
-    //     isClosable: true,
-    //   });
-    // } catch (error: any) {
-    //   toast({
-    //     description: "Erro ao deletar",
-    //     status: "error",
-    //     variant: "solid",
-    //     isClosable: true,
-    //   });
-    // }
+    try {
+      await api.delete(`Clientes/${item}`)
+      onClose();
+      toast({
+        description: "Deletado com Sucesso",
+        status: "success",
+        variant: "solid",
+        isClosable: true,
+      });
+      window.location.reload();
+    } catch (error: any) {
+      toast({
+        description: "Erro ao deletar",
+        status: "error",
+        variant: "solid",
+        isClosable: true,
+      });
+    }
   }
 
   return (
@@ -66,7 +63,10 @@ export const TdOptionsForClients = ({ item }: TdOptionsProps) => {
           <MenuList minW="auto" borderColor="#FFF" p="0">
             <MenuItem
               color="gray.500"
-              onClick={() => push(`scenarios/create?uuid=${item.uuid}`)}
+              onClick={() => {
+                changeMenuOptions(2)
+                push(`menu?uuid=${item.id}`)
+              } }
             >
               <Flex alignItems="center">
                 <MdOutlineEditNote />
@@ -83,7 +83,7 @@ export const TdOptionsForClients = ({ item }: TdOptionsProps) => {
         </Menu>
       </Flex>
       <Modal
-        title="Deseja excluir esse cliente?"
+        title={`Deseja excluir o cliente ${item.nome}?`}
         isOpen={isOpen}
         onClose={onClose}
       >
@@ -92,7 +92,7 @@ export const TdOptionsForClients = ({ item }: TdOptionsProps) => {
             w={{ base: "full", md: "12rem" }}
             colorScheme="red"
             type="button"
-            onClick={() => handleDeleteClient(item.uuid)}
+            onClick={() => handleDeleteClient(item.id)}
           >
             Sim
           </Button>

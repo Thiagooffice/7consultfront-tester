@@ -1,13 +1,14 @@
-import { Box, Center, HStack, Button, Text, VStack } from "@chakra-ui/react";
+import { Box, HStack, Text } from "@chakra-ui/react";
 import { useState } from "react";
 import { MdOutlineArrowBackIos, MdOutlineArrowForwardIos } from "react-icons/md"
 import { PiUsersThreeBold } from "react-icons/pi"
 import { BsNewspaper } from "react-icons/bs"
-import { Layout } from "../../components/layout";
 import { TableClients } from "../../components/tables/tableClients";
 import { FormClient } from "../../components/form/formClient";
+import { useRouter } from "next/router";
 
 export default function Menu() {
+    const router = useRouter()
     const [menu, setMenu] = useState<boolean>(true)
     const [action, setAction] = useState<number>(1)
 
@@ -24,34 +25,37 @@ export default function Menu() {
                     }
                 </Box>
                 <Box>
-                    <Box onClick={() => setAction(1)} pl="1rem" _hover={{
+                    <Box onClick={() => {
+                        setAction(1)
+                        router.push("/menu")
+                    }} pl="1.5rem" _hover={{
                         backgroundColor: "#2849ac",
                         borderRadius: 7,
                     }}>
-                        <Text color="white" cursor="pointer" fontSize="1.5rem">
+                        <Text color="white" cursor="pointer" fontSize="1.3rem">
                             {
-                                menu ? "Clientes" : <PiUsersThreeBold size={30}/>
+                                menu ? "Clientes" : <PiUsersThreeBold size={30} />
                             }
                         </Text>
                     </Box>
-                    <Box onClick={() => setAction(2)} mt={menu ? "0.8rem" : "1rem"} pl="1rem" _hover={{
+                    <Box onClick={() => setAction(2)} mt={menu ? "0.8rem" : "1rem"} pl="1.5rem" _hover={{
                         backgroundColor: "#2849ac",
                         borderRadius: 7,
                     }}>
-                        <Text color="white" cursor="pointer" fontSize="1.5rem">
+                        <Text color="white" cursor="pointer" fontSize="1.3rem">
                             {
-                                menu ? "Cadastro" : <BsNewspaper size={28}/>
+                                menu ?  "Cadastro"   : <BsNewspaper size={28} />
                             }
                         </Text>
                     </Box>
                 </Box>
             </Box>
-                        {
-                            action === 1 && <TableClients/>
-                        }
-                        {
-                            action === 2 && <FormClient/>
-                        }
+            {
+                action === 1 && <TableClients changeMenu={setAction} />
+            }
+            {
+                action === 2 && <FormClient changeMenu={setAction} />
+            }
         </HStack>
     )
 }

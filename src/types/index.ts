@@ -4,12 +4,19 @@ export type SignInData = {
 };
 
 export type Client = {
-  uuid: string
-  name: string
-  updated_at: string
-  created_at: string
+  id: string
+  nome: string
+  dataAtualizacao: string
+  create_Client: string
 }
 
 export type RegisterClient = {
-  name: string
+  nome: string
+}
+
+export type RegisterData = {
+  nome: string
+  email: string
+  senha: string
+  confirmeSenha: string
 }

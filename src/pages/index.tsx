@@ -1,4 +1,4 @@
-import { Box, Flex, Image, FormControl, FormLabel, Button, VStack } from '@chakra-ui/react';
+import { Box, Flex, Image, FormLabel, Button, VStack, useToast } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { useForm, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup"
@@ -8,6 +8,7 @@ import { SignInData } from '../types';
 
 export default function Home() {
   const router = useRouter()
+  const toast = useToast();
 
   const {
     register,
@@ -25,11 +26,15 @@ export default function Home() {
     data
   ) => {
     try {
-      console.log(data);
+      toast({
+        description: "Bem vindo",
+        status: "success",
+        variant: "solid",
+        isClosable: true,
+      });
       router.push("/menu")
-      
     } catch (error) {
-      
+      console.log(error);
     }
   };
 
